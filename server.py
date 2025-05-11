@@ -1,12 +1,17 @@
 import http.server
 import socketserver
 
-PORT = 8004
+PORT = 8000
 
-class CGIRequestHandler(http.server.CGIHTTPRequestHandler):
-    cgi_directories = ["/cgi-bin"]  # Указываем каталог для CGI-скриптов
+handler = http.server.CGIHTTPRequestHandler
+handler.cgi_directories = ["/cgi-bin"]
 
-# Запуск сервера
-with socketserver.TCPServer(("", PORT), CGIRequestHandler) as httpd:
-    print(f"Server running at http://localhost:{PORT}/")
+class TCPServer(socketserver.TCPServer):
+    def server_bind(self):
+        super().server_bind()
+        self.server_name = 'localhost'
+        self.server_port = self.server_address[1]
+
+with TCPServer(("", PORT), handler) as httpd:
+    print(f"Serving at port {PORT}")
     httpd.serve_forever()

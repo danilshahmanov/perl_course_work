@@ -3,29 +3,41 @@ package FileHandler;
 use strict;
 use warnings;
 use Encode;
-use File::Slurp;
+use File::Basename;
+use Encode::Detect;
 
-sub save_file {
-    my ($file, $filename) = @_;
-    
-    open my $fh, '>', "/tmp/$filename" or die "Не могу открыть файл для записи: $!";
-    print $fh $file;
-    close $fh;
-    
-    return "/tmp/$filename";
+# Функция для обработки кодировки файла
+sub process_file {
+    my ($upload_filehandle, $filename, $target_encoding) = @_;
+
+    my $basename = basename($filename);
+    my $new_filename = "converted_$basename";
+    my $output_path  = "downloads/$new_filename";
+
+    local $/;
+    my $raw = <$upload_filehandle>;
+
+    my $source_encoding = detect_encoding($raw);
+
+    my $content = $raw;
+    if ($source_encoding && $source_encoding ne $target_encoding) {
+        $content = Encode::decode($source_encoding, $raw);
+        $content = Encode::encode($target_encoding, $content);
+    }
+
+    open my $out, '>:raw', $output_path or die "Невозможно сохранить файл: $!";
+    print $out $content;
+    close $out;
+
+    return $new_filename;
 }
 
-sub change_encoding {
-    my ($file_path, $from_encoding, $to_encoding) = @_;
-    
-    my $content = read_file($file_path, binmode => ':raw');
-    
-    my $decoded_content = decode($from_encoding, $content);
-    my $encoded_content = encode($to_encoding, $decoded_content);
+# Функция для определения кодировки текста
+sub detect_encoding {
+    my ($text) = @_;
 
-    write_file($file_path, $encoded_content);
-    
-    return $file_path;
+    my $detected = Encode::Detect::detect($text);
+    return $detected || 'UTF-8';
 }
 
 1;
