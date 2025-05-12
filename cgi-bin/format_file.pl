@@ -30,6 +30,7 @@ print $cgi->start_html(
     -style => { -src => '../styles.css' }
 );
 
+
 if ($input_format) {
     print $cgi->h1("Результат изменения формата файла");
 

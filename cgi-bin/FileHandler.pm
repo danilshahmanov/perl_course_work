@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Encode;
 use File::Basename;
-use Encode::Detect;
+use Encode::Guess;
 use Encode qw(decode encode is_utf8);
 use Text::Markdown 'markdown';
 use HTML::WikiConverter;
@@ -40,8 +40,8 @@ sub process_encode_file {
 sub detect_encoding {
     my ($text) = @_;
 
-    my $detected = Encode::Detect::detect($text);
-    return $detected || 'UTF-8';
+    my $decoder = Encode::Guess->guess($text);
+    return $decoder->name || 'UTF-8';
 }
 
 # Функция для обработки формата файла
@@ -59,6 +59,7 @@ sub process_format_file {
 
     if ($from eq $to) {
         $converted = $text;
+        $new_filename = "converted_format_$filename.md";
     }
     # Markdown → HTML
     elsif ($from eq 'markdown' && $to eq 'html') {

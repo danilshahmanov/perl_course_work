@@ -38,4 +38,6 @@ print $cgi->popup_menu(
 print $cgi->submit(-value => 'Загрузить и конвертировать');
 print $cgi->end_form;
 
+print $cgi->p($cgi->a({-href => '/index.html'}, 'Вернуться на главную'));
+
 print $cgi->end_html;

@@ -18,6 +18,7 @@ print $cgi->start_html(
     -title => 'Результат обработки файла',
     -style => { -src => '../styles.css' }
 );
+
 print $cgi->h1("Результат изменения кодировки файла");
 
 my $new_filename = FileHandler::process_encode_file($upload_filehandle, $filename, $encoding);
