@@ -1,28 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Загрузка файла</title>
+    <title>Конвертер</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Загрузите файл для конвертации</h1>
-    <form action="/cgi-bin/process_file.pl" method="POST" enctype="multipart/form-data">
-        <label for="file">Выберите файл для загрузки:</label>
-        <input type="file" name="file" id="file" required>
-        
-        <label for="encoding">Выберите кодировку:</label>
+    <h1>Выберите преобразование для файла</h1>
+    <form action="/cgi-bin/encode_form.pl" method="get">
+        <input type="submit" value="Изменение кодировки">
+    </form>
 
-        <select name="encoding" id="encoding">
-            <option value="UTF-8">UTF-8</option>
-            <option value="Windows-1251">Windows-1251</option>
-            <option value="ISO-8859-1">ISO-8859-1</option>
-            <option value="KOI8-R">KOI8-R</option>
-            <option value="ASCII">ASCII</option>
-            <option value="UTF-16">UTF-16</option>
-        </select>
-
-        <input type="submit" value="Загрузить и конвертировать">
+    <form action="/cgi-bin/format_form.pl" method="get">
+        <input type="submit" value="Изменение формата">
     </form>
 </body>
 </html>
